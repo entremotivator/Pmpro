@@ -4,12 +4,6 @@ from PIL import Image
 import requests
 import os
 
-def load_lottie_url(url: str):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
 
 # Initialize Streamlit app
 img = Image.open('icon.png')
