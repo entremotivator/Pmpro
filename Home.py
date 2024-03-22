@@ -1,16 +1,15 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
-from streamlit_lottie import st_lottie
 import requests
-import json
 import os
 
 def load_lottie_url(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
         return None
-    return r.json()
 
 # Initialize Streamlit app
 img = Image.open('icon.png')
@@ -19,15 +18,13 @@ st.set_page_config(page_title="To-Do-List", page_icon=img)
 # UI
 st.title("***To-Do List Manager***")
 col1, col2 = st.columns([6, 2])
-cola, colb = col2.columns([3, 1])
+cola, colb = st.columns([3, 1])
 
 with col1:
     st.subheader("Set and Complete your tasks by making a To-Do list !")
 
 with cola:
-    lottie_animation_2 = "https://assets10.lottiefiles.com/packages/lf20_z4cshyhf.json"
-    lottie_anime_json2 = load_lottie_url(lottie_animation_2)
-    st_lottie(lottie_anime_json2, key="hello")
+    st.warning("Lottie animations are not supported in this environment.")
 
 # Sidebar
 st.sidebar.markdown("<h1 style='text-align: center; '>WELCOME! 👋</h1>", unsafe_allow_html=True)
@@ -45,65 +42,23 @@ def save_local_data():
     data.to_csv("local_data.csv", index=False)
 
 def load_local_data():
-    return pd.read_csv("local_data.csv") if "local_data.csv" in os.listdir() else pd.DataFrame(columns=["Task", "Due date", "Completed"])
+    if "local_data.csv" in os.listdir():
+        return pd.read_csv("local_data.csv")
+    else:
+        return pd.DataFrame(columns=["Task", "Due date", "Completed"])
 
 # Add example to-do list tasks
 example_tasks = [
     {"Task": "Start my business",
-     "Subtasks": ["Develop business plan",
-                   "Register business name",
-                   "Secure funding",
-                   "Hire employees",
-                   "Set up legal structure",
-                   "Create marketing strategy",
-                   "Build website",
-                   "Purchase necessary equipment",
-                   "Launch product/service",
-                   "Network with potential clients"]},
+     "Subtasks": ["Develop business plan", "Register business name", "Secure funding", "Hire employees", "Set up legal structure", "Create marketing strategy", "Build website", "Purchase necessary equipment", "Launch product/service", "Network with potential clients"]},
     {"Task": "Apply for a grant",
-     "Subtasks": ["Research available grants",
-                   "Check eligibility criteria",
-                   "Gather required documents",
-                   "Write grant proposal",
-                   "Submit application",
-                   "Follow up on application status",
-                   "Attend interviews/presentations",
-                   "Revise proposal if needed",
-                   "Accept grant if awarded",
-                   "Use grant funds as specified"]},
+     "Subtasks": ["Research available grants", "Check eligibility criteria", "Gather required documents", "Write grant proposal", "Submit application", "Follow up on application status", "Attend interviews/presentations", "Revise proposal if needed", "Accept grant if awarded", "Use grant funds as specified"]},
     {"Task": "Fix my credit",
-     "Subtasks": ["Check credit report for errors",
-                   "Dispute inaccuracies",
-                   "Negotiate with creditors",
-                   "Pay off outstanding debts",
-                   "Set up automatic payments",
-                   "Limit new credit applications",
-                   "Increase credit limits",
-                   "Diversify credit types",
-                   "Keep credit utilization low",
-                   "Monitor credit regularly"]},
+     "Subtasks": ["Check credit report for errors", "Dispute inaccuracies", "Negotiate with creditors", "Pay off outstanding debts", "Set up automatic payments", "Limit new credit applications", "Increase credit limits", "Diversify credit types", "Keep credit utilization low", "Monitor credit regularly"]},
     {"Task": "Market on social media",
-     "Subtasks": ["Choose social media platforms",
-                   "Create content calendar",
-                   "Design engaging visuals",
-                   "Schedule posts",
-                   "Interact with followers",
-                   "Run ad campaigns",
-                   "Analyze engagement metrics",
-                   "Collaborate with influencers",
-                   "Respond to comments/messages",
-                   "Adjust strategy based on performance"]},
+     "Subtasks": ["Choose social media platforms", "Create content calendar", "Design engaging visuals", "Schedule posts", "Interact with followers", "Run ad campaigns", "Analyze engagement metrics", "Collaborate with influencers", "Respond to comments/messages", "Adjust strategy based on performance"]},
     {"Task": "Daily habit tracker",
-     "Subtasks": ["List habits to track",
-                   "Set specific goals for each habit",
-                   "Establish daily tracking routine",
-                   "Record progress consistently",
-                   "Review performance regularly",
-                   "Adjust goals if needed",
-                   "Reward yourself for progress",
-                   "Share progress with accountability partner",
-                   "Stay motivated with reminders",
-                   "Celebrate milestones"]}
+     "Subtasks": ["List habits to track", "Set specific goals for each habit", "Establish daily tracking routine", "Record progress consistently", "Review performance regularly", "Adjust goals if needed", "Reward yourself for progress", "Share progress with accountability partner", "Stay motivated with reminders", "Celebrate milestones"]}
 ]
 
 # Display tasks and subtasks
